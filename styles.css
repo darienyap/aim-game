@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -23,4 +24,31 @@ body {
   position: absolute;
   cursor: pointer;
   transition: all 0.2s ease;
+=======
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #111;
+  color: white;
+}
+
+#gameArea {
+  width: 80vw;
+  height: 60vh;
+  margin: 20px auto;
+  background: #222;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.target {
+  width: 60px;
+  height: 60px;
+  background: red;
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.2s ease;
+>>>>>>> 741eda9 (2nd draft)
 }
