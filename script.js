@@ -4,6 +4,8 @@ const accuracyEl = document.getElementById('accuracy');
 
 let score = 0;
 let attempts = 0;
+let timeLeft = 30;
+const timerEl = document.getElementById('timer');
 
 function spawnTarget() {
   const target = document.createElement('div');
@@ -15,7 +17,7 @@ function spawnTarget() {
   target.style.left = x + 'px';
   target.style.top = y + 'px';
 
-  // troll: move away when cursor gets close 😈
+  // troll: move away when cursor gets close
   target.addEventListener('mouseenter', () => {
     const newX = Math.random() * (gameArea.clientWidth - 60);
     const newY = Math.random() * (gameArea.clientHeight - 60);
@@ -24,9 +26,10 @@ function spawnTarget() {
   });
 
   target.addEventListener('click', () => {
+    if (timeLeft <= 0) return;
     attempts++;
 
-    // troll: sometimes don't count score 💀
+    // troll: sometimes don't count score
     if (Math.random() < 0.3) {
       score++;
     }
@@ -39,7 +42,7 @@ function spawnTarget() {
   gameArea.appendChild(target);
 }
 
-// clicking anywhere else = miss 😭
+// clicking anywhere else = miss
 gameArea.addEventListener('click', (e) => {
   if (!e.target.classList.contains('target')) {
     attempts++;
@@ -52,7 +55,7 @@ function updateStats() {
 
   let accuracy = attempts === 0 ? 100 : Math.floor((score / attempts) * 100);
 
-  // troll: cap accuracy so it never looks good 💀
+  // troll: cap accuracy so it never looks good
   if (accuracy > 40) accuracy = Math.floor(Math.random() * 40);
 
   accuracyEl.textContent = accuracy;
@@ -60,3 +63,55 @@ function updateStats() {
 
 // spawn first target
 spawnTarget();
+
+const timerInterval = setInterval(() => {
+  timeLeft--;
+  timerEl.textContent = timeLeft;
+
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+
+    // End game screen
+    gameArea.innerHTML = `
+      <h2>Time's up!</h2>
+      <p>Score: ${score}</p>
+      <p>Accuracy: ${accuracyEl.textContent}%</p>
+      <p>darien is forever da goat as always :)</p>
+    `;
+    document.getElementById('replayBtn').style.display = 'inline-block';
+  }
+}, 1000);
+
+document.getElementById('replayBtn').addEventListener('click', () => {
+  // reset variables
+  score = 0;
+  attempts = 0;
+  timeLeft = 30;
+  scoreEl.textContent = score;
+  accuracyEl.textContent = 100;
+  timerEl.textContent = timeLeft;
+
+  // hide replay button
+  document.getElementById('replayBtn').style.display = 'none';
+
+  // clear and restart game area
+  gameArea.innerHTML = '';
+  spawnTarget();
+
+  // restart timer
+  const timerInterval = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      gameArea.innerHTML = `
+        <h2>Time's up!</h2>
+        <p>Score: ${score}</p>
+        <p>Accuracy: ${accuracyEl.textContent}%</p>
+        <p>Skill issue 😭</p>
+      `;
+      document.getElementById('replayBtn').style.display = 'inline-block';
+    }
+  }, 1000);
+});
